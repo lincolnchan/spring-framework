@@ -586,17 +586,23 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
+			// 注册容器中需要用到的处理器等
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
+				// 子容器自动实现 模版方法
 				postProcessBeanFactory(beanFactory);
 
 				StartupStep beanPostProcess = this.applicationStartup.start("spring.context.beans.post-process");
 				// Invoke factory processors registered as beans in the context.
+				// 执行前面注册到容器中的处理器逻辑，其中包括里面的扩展 用户可以自己添加处理器，然后再这里执行逻辑
+				// 执行容器中有的BeanFactoryPostProcessor、BeanDefinationRegistraPostProcessor
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
+				// 注册bean后置处理器 然后在bean创建过程中 好对bean进行处理
+				// 注册就是添加东西到集合中，方便后面逻辑使用
 				registerBeanPostProcessors(beanFactory);
 				beanPostProcess.end();
 
@@ -604,18 +610,24 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
+				// 初始化事件广播器 事件相关用
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				// 扩展实现
 				onRefresh();
 
 				// Check for listener beans and register them.
+				// 事件监听器 并注册
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
+				// 完成工厂的初始化
+				// 最终要的是完成非懒加载的spring bean创建 缓存进工厂
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+				// 发布容器启动完成事件
 				finishRefresh();
 			}
 
@@ -944,9 +956,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.setTempClassLoader(null);
 
 		// Allow for caching all bean definition metadata, not expecting further changes.
+		// 缓存bean definition防止日后时候被中间操作修改了
 		beanFactory.freezeConfiguration();
 
 		// Instantiate all remaining (non-lazy-init) singletons.
+		// 实例化非懒加载的单例springd对象
 		beanFactory.preInstantiateSingletons();
 	}
 

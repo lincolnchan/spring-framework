@@ -36,6 +36,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
+ * 表示配置类的元数据
  * Represents a user-defined {@link Configuration @Configuration} class.
  * <p>Includes a set of {@link Bean} methods, including all such methods
  * defined in the ancestry of the class, in a 'flattened-out' manner.
@@ -49,15 +50,19 @@ import org.springframework.util.ClassUtils;
  */
 final class ConfigurationClass {
 
+	// 注解元数据
 	private final AnnotationMetadata metadata;
 
+	// 资源
 	private final Resource resource;
 
 	@Nullable
 	private String beanName;
 
+	// 被哪些配置导入的
 	private final Set<ConfigurationClass> importedBy = new LinkedHashSet<>(1);
 
+	// 当前配置类的bean方法集合
 	private final Set<BeanMethod> beanMethods = new LinkedHashSet<>();
 
 	private final Map<String, Class<? extends BeanDefinitionReader>> importedResources =
@@ -194,6 +199,7 @@ final class ConfigurationClass {
 		return this.beanMethods;
 	}
 
+	// 导入资源 @importResource
 	void addImportedResource(String importedResource, Class<? extends BeanDefinitionReader> readerClass) {
 		this.importedResources.put(importedResource, readerClass);
 	}

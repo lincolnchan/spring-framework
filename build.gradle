@@ -18,8 +18,17 @@ ext {
 
 configure(allprojects) { project ->
 	repositories {
+
+		mavenLocal()
 		mavenCentral()
 		maven {
+			allowInsecureProtocol = true
+			url = 'http://maven.aliyun.com/nexus/content/groups/public/' }
+		maven {
+			allowInsecureProtocol = true
+			url = 'https://maven.aliyun.com/repository/public' }
+		maven {
+			allowInsecureProtocol = true
 			url "https://repo.spring.io/milestone"
 			content {
 				// Netty 5 optional support
@@ -27,10 +36,14 @@ configure(allprojects) { project ->
 			}
 		}
 		if (version.contains('-')) {
-			maven { url "https://repo.spring.io/milestone" }
+			maven {
+				allowInsecureProtocol = true
+				url "https://repo.spring.io/milestone" }
 		}
 		if (version.endsWith('-SNAPSHOT')) {
-			maven { url "https://repo.spring.io/snapshot" }
+			maven {
+				allowInsecureProtocol = true
+				url "https://repo.spring.io/snapshot" }
 		}
 	}
 	configurations.all {

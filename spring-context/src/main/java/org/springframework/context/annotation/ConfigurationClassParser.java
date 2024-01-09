@@ -215,13 +215,16 @@ class ConfigurationClassParser {
 				Collections.emptyList());
 	}
 
+	// 配置类解析核心方法
 	protected void processConfigurationClass(ConfigurationClass configClass, Predicate<String> filter) throws IOException {
 		if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
 			return;
 		}
-
+		// 配置类 到 配置类的映射
 		ConfigurationClass existingClass = this.configurationClasses.get(configClass);
+		// 老的
 		if (existingClass != null) {
+			// 当前配置类是否被import进来的
 			if (configClass.isImported()) {
 				if (existingClass.isImported()) {
 					existingClass.mergeImportedBy(configClass);
@@ -240,6 +243,7 @@ class ConfigurationClassParser {
 		// Recursively process the configuration class and its superclass hierarchy.
 		SourceClass sourceClass = asSourceClass(configClass, filter);
 		do {
+			// 处理配置类
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass, filter);
 		}
 		while (sourceClass != null);
@@ -325,6 +329,7 @@ class ConfigurationClassParser {
 		processInterfaces(configClass, sourceClass);
 
 		// Process superclass, if any
+		// 处理父类
 		if (sourceClass.getMetadata().hasSuperClass()) {
 			String superclass = sourceClass.getMetadata().getSuperClassName();
 			if (superclass != null && !superclass.startsWith("java") &&

@@ -1056,6 +1056,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				// Determine handler for the current request.
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
+					// 如果没有找到请求对应的处理器 则404
 					noHandlerFound(processedRequest, response);
 					return;
 				}
@@ -1072,7 +1073,7 @@ public class DispatcherServlet extends FrameworkServlet {
 						return;
 					}
 				}
-
+				// 拦截器的preHandle方法执行
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}

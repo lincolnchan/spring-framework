@@ -121,6 +121,7 @@ public abstract class ConfigurationClassUtils {
 			// Check already loaded Class if present...
 			// since we possibly can't even load the class file for this Class.
 			Class<?> beanClass = abstractBd.getBeanClass();
+			// 排除容器内部使用的类
 			if (BeanFactoryPostProcessor.class.isAssignableFrom(beanClass) ||
 					BeanPostProcessor.class.isAssignableFrom(beanClass) ||
 					AopInfrastructureBean.class.isAssignableFrom(beanClass) ||
@@ -142,13 +143,18 @@ public abstract class ConfigurationClassUtils {
 				return false;
 			}
 		}
-
+		// 1. 有Configuration注解的
 		Map<String, Object> config = metadata.getAnnotationAttributes(Configuration.class.getName());
+		// 1.1 注解中proxyBeanMethods = true
 		if (config != null && !Boolean.FALSE.equals(config.get("proxyBeanMethods"))) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
-		else if (config != null || Boolean.TRUE.equals(beanDef.getAttribute(CANDIDATE_ATTRIBUTE)) ||
-				isConfigurationCandidate(metadata)) {
+		// 1 。轻量级config 有configuration注解但proxyBeanMethods = false
+		// 2. CANDIDATE_ATTRIBUTE 有这个属性
+		// 3. isConfigurationCandidate方法为true
+		else if (config != null
+				|| Boolean.TRUE.equals(beanDef.getAttribute(CANDIDATE_ATTRIBUTE))
+				|| isConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}
 		else {

@@ -1172,7 +1172,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	/**
 	 * Subclasses must implement this method to do the work of request handling,
 	 * receiving a centralized callback for GET, POST, PUT and DELETE.
-	 * <p>The contract is essentially the same as that for the commonly overridden
+	 * <p>The CONTRACT is essentially the same as that for the commonly overridden
 	 * {@code doGet} or {@code doPost} methods of HttpServlet.
 	 * <p>This class intercepts calls to ensure that exception handling and
 	 * event publication takes place.
